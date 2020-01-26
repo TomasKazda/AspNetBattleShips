@@ -27,6 +27,9 @@ namespace BattleShips.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
+        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
+        public DateTime GameCreatedAt { get; set; } = DateTime.UtcNow;
+
         [Required]
         public IdentityUser Player1 { get; set; }
 
