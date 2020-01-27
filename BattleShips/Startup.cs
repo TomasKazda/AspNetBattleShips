@@ -6,12 +6,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using BattleShips.Data;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using BattleShips.Services;
 
 namespace BattleShips
 {
@@ -39,6 +41,11 @@ namespace BattleShips
                 options.SignIn.RequireConfirmedAccount = false;
             })
                 .AddEntityFrameworkStores<ApplicationDbContext>();
+
+            services.AddDistributedMemoryCache();
+            services.AddSession();
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
             services.AddRazorPages();
         }
 
@@ -64,6 +71,8 @@ namespace BattleShips
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseSession();
 
             app.UseEndpoints(endpoints =>
             {
