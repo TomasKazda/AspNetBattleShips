@@ -15,20 +15,20 @@ namespace BattleShips.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.0")
+                .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("BattleShips.Models.Game", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("Id")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<DateTime>("GameCreatedAt")
-                        .ValueGeneratedOnAddOrUpdate()
-                        .HasColumnType("datetime2");
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("datetime2")
+                        .HasDefaultValue(new DateTime(2020, 1, 28, 6, 41, 46, 152, DateTimeKind.Utc).AddTicks(2605));
 
                     b.Property<int>("GameState")
                         .HasColumnType("int");
@@ -65,8 +65,8 @@ namespace BattleShips.Migrations
                     b.Property<int>("CoordinateY")
                         .HasColumnType("int");
 
-                    b.Property<int>("GameId")
-                        .HasColumnType("int");
+                    b.Property<Guid>("GameId")
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<bool>("Hidden")
                         .HasColumnType("bit");

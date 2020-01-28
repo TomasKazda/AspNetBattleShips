@@ -23,7 +23,7 @@ namespace BattleShips
         [BindProperty]
         public Game Game { get; set; }
 
-        public async Task<IActionResult> OnGetAsync(int? id)
+        public async Task<IActionResult> OnGetAsync(Guid? id)
         {
             if (id == null)
             {
@@ -73,7 +73,7 @@ namespace BattleShips
             return RedirectToPage("./Index");
         }
 
-        private bool GameExists(int id)
+        private bool GameExists(Guid id)
         {
             return _context.Games.Any(e => e.Id == id);
         }

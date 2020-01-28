@@ -45,8 +45,11 @@ namespace BattleShips
             services.AddDistributedMemoryCache();
             services.AddSession();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddTransient<GameService>();
 
-            services.AddRazorPages();
+            services.AddRazorPages(opt => {
+                //opt.Conventions.AuthorizeFolder("/Game");
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

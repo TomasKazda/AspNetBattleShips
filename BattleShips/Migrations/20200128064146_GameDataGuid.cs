@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BattleShips.Migrations
 {
-    public partial class GameData01 : Migration
+    public partial class GameDataGuid : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -10,8 +11,8 @@ namespace BattleShips.Migrations
                 name: "Games",
                 columns: table => new
                 {
-                    Id = table.Column<int>(nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(nullable: false),
+                    GameCreatedAt = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 1, 28, 6, 41, 46, 152, DateTimeKind.Utc).AddTicks(2605)),
                     Player1Id = table.Column<string>(nullable: false),
                     Player2Id = table.Column<string>(nullable: true),
                     GameState = table.Column<int>(nullable: false),
@@ -41,7 +42,7 @@ namespace BattleShips.Migrations
                     Id = table.Column<int>(nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     OwnerId = table.Column<string>(nullable: true),
-                    GameId = table.Column<int>(nullable: false),
+                    GameId = table.Column<Guid>(nullable: false),
                     Type = table.Column<int>(nullable: false),
                     Hidden = table.Column<bool>(nullable: false),
                     CoordinateX = table.Column<int>(nullable: false),

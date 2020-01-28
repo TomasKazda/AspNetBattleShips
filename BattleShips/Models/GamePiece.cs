@@ -17,6 +17,7 @@ namespace BattleShips.Models
         }
 
         [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public IdentityUser Owner { get; set; }
@@ -27,7 +28,7 @@ namespace BattleShips.Models
         public Game GameLink { get; set; }
 
         [ForeignKey("GameLink")]
-        public int GameId { get; set; }
+        public Guid GameId { get; set; }
 
         [Required]
         public GamePieceType Type { get; set; }
