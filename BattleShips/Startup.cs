@@ -48,7 +48,7 @@ namespace BattleShips
             services.AddTransient<GameService>();
 
             services.AddRazorPages(opt => {
-                //opt.Conventions.AuthorizeFolder("/Game");
+                opt.Conventions.AuthorizeFolder("/Game");
             });
         }
 

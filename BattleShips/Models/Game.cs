@@ -16,18 +16,20 @@ namespace BattleShips.Models
             GameState = GameState.ShipDeploying;
             Player2 = null;
             Player2Id = null;
+            GameCreatedAt = DateTime.UtcNow;
         }
 
-        public Game(string player1Id): this()
+        public Game(Guid id, string player1Id): this()
         {
             Player1Id = player1Id;
+            Id = id;
         }
 
         [Key]
         public Guid Id { get; set; }
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime GameCreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime GameCreatedAt { get; set; }
 
         [Required]
         public IdentityUser Player1 { get; set; }

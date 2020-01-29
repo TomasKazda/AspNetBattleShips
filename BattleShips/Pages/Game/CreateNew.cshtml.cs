@@ -1,29 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using BattleShips.Models;
+using BattleShips.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
-using BattleShips.Services;
+using System;
 
 namespace BattleShips
 {
     public class CreateNewModel : PageModel
     {
-        private readonly GameService gs;
+        readonly GameService _gs;
 
         public CreateNewModel(GameService gs)
         {
-            this.gs = gs;
+            _gs = gs;
         }
+        public Game GameData { get; set; }
 
-        public Guid GameGuid { get; set; }
-        public string UserId { get; set; }
-
-        public void OnGet()
+        private Guid newGame()
         {
-            GameGuid = gs.GameId;
-            UserId = gs.GetUserId();
+            return _gs.NewGame();
+        }
+        public IActionResult OnGet()
+        {
+            if (!_gs.IsGameLoaded) return RedirectToPage("Deploy", new { gameKey = newGame() });
+
+            GameData = _gs.GetGame();
+            return Page();
+        }
+        public IActionResult OnGetForce()
+        {
+            return RedirectToPage("Deploy", new { gameKey = newGame() });
         }
     }
 }

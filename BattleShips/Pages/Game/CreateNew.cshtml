@@ -4,8 +4,15 @@
     ViewData["Title"] = "CreateNew";
 }
 
-<h1>CreateNew</h1>
+<h1>Vytvoření nové hry</h1>
+@if (Model.GameData != default)
+{
+  <p>Je aktivní hra z @Model.GameData.GameCreatedAt (@Model.GameData.GameState) mezi @Model.GameData.Player1?.UserName a @(Model.GameData.Player2?.UserName ?? "nepřipojen")</p>
+}
+<p class="text-center">
+    <a class="btn btn-warning" asp-page="Play">Návrat do hry</a>
+</p>
+<p class="text-center">
+    <a class="btn btn-warning" asp-page-handler="Force">Vytvořit novou hru</a>
+</p>
 
-<p>@Model.GameGuid</p>
-
-<p>@Model.UserId</p>

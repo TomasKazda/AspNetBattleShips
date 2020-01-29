@@ -1,0 +1,49 @@
+﻿@page
+@model BattleShips.ListGamesModel
+@{
+    ViewData["Title"] = "ListGames";
+}
+
+<h1>Připojení ke hře</h1>
+
+<h2>Moje hry</h2>
+<table>
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameCreatedAt)</th>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameState)</th>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player2)</th>
+            <th></th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.MyGames)
+    {
+        <tr>
+            <td>@item.GameCreatedAt</td>
+            <td>@item.GameState</td>
+            <td>@(item.Player2?.UserName ?? "nepřipojen")</td>
+            <td><a asp-page-handler="delete" asp-route-id="@item.Id">(smazat)</a></td>
+        </tr>
+    }
+</table>
+
+<h2>Další hry</h2>
+<table>
+    <thead>
+        <tr>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameCreatedAt)</th>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameState)</th>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player1)</th>
+            <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player2)</th>
+        </tr>
+    </thead>
+    @foreach (var item in Model.OtherGames)
+    {
+<tr>
+    <td>@item.GameCreatedAt</td>
+    <td>@item.GameState</td>
+    <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
+    <td>@(item.Player2?.UserName ?? "nepřipojen")</td>
+</tr>
+    }
+</table>
