@@ -21,6 +21,9 @@ namespace BattleShips
         public IList<Game> MyGames { get; set; }
         public IList<Game> OtherGames { get; set; }
 
+        [TempData]
+        public string Message { get; set; }
+
         public void OnGet()
         {
             MyGames = _gs.GetMyGames();
@@ -38,6 +41,8 @@ namespace BattleShips
             {
                 return NotFound();
             }
+            else
+                Message = $"Hra odstraněna ({id})";
 
             return RedirectToPage();
         }

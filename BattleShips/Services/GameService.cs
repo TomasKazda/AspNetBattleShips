@@ -42,6 +42,12 @@ namespace BattleShips.Services
             _httpContext.Session.Set("GameKey", data);
         }
 
+        public void UnloadGame()
+        {
+            this.GameId = default;
+            Save(this.GameId);
+        }
+
         public bool IsGameLoaded => this.GameId != default;
 
         public Guid NewGame()
@@ -84,6 +90,7 @@ namespace BattleShips.Services
             {
                 _db.Games.Remove(game);
                 _db.SaveChanges();
+                UnloadGame();
                 return true;
             }
             return false;
