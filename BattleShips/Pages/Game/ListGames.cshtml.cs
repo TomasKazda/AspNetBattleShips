@@ -6,6 +6,7 @@ using BattleShips.Models;
 using BattleShips.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Helpers;
 
 namespace BattleShips
 {
@@ -20,9 +21,6 @@ namespace BattleShips
 
         public IList<Game> MyGames { get; set; }
         public IList<Game> OtherGames { get; set; }
-
-        [TempData]
-        public string Message { get; set; }
 
         public void OnGet()
         {
@@ -42,7 +40,7 @@ namespace BattleShips
                 return NotFound();
             }
             else
-                Message = $"Hra odstraněna ({id})";
+                TempData.AddMessage("MsgSuccess", $"Hra odstraněna ({id})");
 
             return RedirectToPage();
         }

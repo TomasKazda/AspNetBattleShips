@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Session.Helpers;
+using Microsoft.Extensions.Configuration;
+using Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,18 @@ namespace BattleShips.Services
     {
         readonly HttpContext _httpContext;
         private readonly ApplicationDbContext _db;
+        private readonly IConfiguration _config;
 
         //readonly UserManager<IdentityUser> _userManager;
 
-        public GameService(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor/*, UserManager<IdentityUser> userManager*/)
+        public GameService(ApplicationDbContext db, IHttpContextAccessor httpContextAccessor, IConfiguration config/*, UserManager<IdentityUser> userManager*/)
         {
 
             _httpContext = httpContextAccessor.HttpContext;
             //_userManager = userManager;
             GameId = LoadOrCreate();
             this._db = db;
+            this._config = config;
         }
 
         private Guid GameId { get; set; }
@@ -39,7 +42,22 @@ namespace BattleShips.Services
         }
         private void Save(Guid data)
         {
+            this.GameId = data;
             _httpContext.Session.Set("GameKey", data);
+        }
+
+        private void AddGamePiecesToGame()
+        {
+            int size = _config.GetValue<int>("BattlefieldSize");
+            for (int ycolumn = 0; ycolumn < size; ycolumn++)
+            {
+                for (int xrow = 0; xrow < size; xrow++)
+                {
+                    GamePiece gp = new GamePiece() { CoordinateX = xrow, CoordinateY = ycolumn, GameId = this.GameId, OwnerId = GetUserId()};
+                    _db.GamePieces.Add(gp);
+                }
+            }
+            _db.SaveChanges();
         }
 
         public void UnloadGame()
@@ -52,14 +70,15 @@ namespace BattleShips.Services
 
         public Guid NewGame()
         {
-            Guid result = Guid.NewGuid();
-            string id = GetUserId();
-            if (id == default) throw new NullReferenceException("User not logged in...");
-            Game g = new Game(result, id);
+            Guid gameId = Guid.NewGuid();
+            string userId = GetUserId();
+            if (userId == default) throw new NullReferenceException("User not logged in...");
+            Game g = new Game(gameId, userId);
             _db.Games.Add(g);
             _db.SaveChanges();
-            Save(result);
-            return result;
+            Save(gameId);
+            AddGamePiecesToGame();
+            return gameId;
         }
 
         public Game GetGame(Guid id)

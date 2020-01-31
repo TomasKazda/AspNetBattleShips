@@ -3,9 +3,9 @@
 @{
     ViewData["Title"] = "Home page";
 }
-
 <div class="text-center">
     <h1 class="display-4">The Battleship Game</h1>
+    <partial name="_InfoTempData" />
     <p>
         Můžete
         @if(Model.gameLoaded) {

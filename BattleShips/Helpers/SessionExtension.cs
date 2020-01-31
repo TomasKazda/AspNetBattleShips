@@ -2,7 +2,7 @@
 using Utf8Json;
 using Utf8Json.Resolvers;
 
-namespace Session.Helpers
+namespace Helpers
 {
     public static class SessionExtensions
     {
