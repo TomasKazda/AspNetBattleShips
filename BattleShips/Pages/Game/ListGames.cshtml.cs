@@ -22,10 +22,14 @@ namespace BattleShips
         public IList<Game> MyGames { get; set; }
         public IList<Game> OtherGames { get; set; }
 
+        public bool gameLoaded => _gs.IsGameLoaded;
+
+        public Guid GameId => _gs.GameId;
+
         public void OnGet()
         {
             MyGames = _gs.GetMyGames();
-            OtherGames = _gs.GetOtherGames();
+            OtherGames = _gs.GetReadyToJoinGames();
         }
 
         public IActionResult OnGetDelete(Guid? id)

@@ -9,12 +9,21 @@
 <partial name="_InfoTempData" />
 
 <h2>Moje hry</h2>
+<p>
+    Můžete
+    @if (Model.gameLoaded)
+    {
+        <span><a class="btn btn-primary" asp-page="/Game/Deploy">pokračovat v rozehrané hře</a> nebo </span>
+    }
+    <a class="btn btn-primary" asp-page="/Game/CreateNew">vytvořit novou hru</a>
+</p>
 <div class="table-responsive-sm">
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
                 <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameCreatedAt)</th>
                 <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameState)</th>
+                <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player1)</th>
                 <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player2)</th>
                 <th></th>
             </tr>
@@ -23,33 +32,40 @@
         {
             <tr>
                 <td>@item.GameCreatedAt</td>
-                <td>@item.GameState</td>
+                <td>@Html.DisplayFor(model => item.GameState)</td>
+                <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
                 <td>@(item.Player2?.UserName ?? "nepřipojen")</td>
-                <td><a asp-page-handler="delete" asp-route-id="@item.Id">(smazat)</a></td>
+                <td>
+                    <a asp-page-handler="delete" asp-route-id="@item.Id">(smazat)</a>
+                    @if (item.Id != Model.GameId)
+                    {
+                        <a asp-page="Deploy" asp-route-gameId="@item.Id">(pokračovat)</a>
+                    }
+                </td>
             </tr>
         }
     </table>
 </div>
 
-    <h2>Další hry</h2>
-    <div class="table-responsive-sm">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameCreatedAt)</th>
-                    <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameState)</th>
-                    <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player1)</th>
-                    <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player2)</th>
-                </tr>
-            </thead>
-            @foreach (var item in Model.OtherGames)
-            {
-                <tr>
-                    <td>@item.GameCreatedAt</td>
-                    <td>@item.GameState</td>
-                    <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
-                    <td><a asp-page-handler="join" asp-route-id="@item.Id">(připojit)</a></td>
-                </tr>
-            }
-        </table>
-    </div>
+<h2>Další hry</h2>
+<div class="table-responsive-sm">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameCreatedAt)</th>
+                <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().GameState)</th>
+                <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player1)</th>
+                <th>@Html.DisplayNameFor(m => m.MyGames.FirstOrDefault().Player2)</th>
+            </tr>
+        </thead>
+        @foreach (var item in Model.OtherGames)
+        {
+            <tr>
+                <td>@item.GameCreatedAt</td>
+                <td>@Html.DisplayFor(model => item.GameState)</td>
+                <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
+                <td><a asp-page-handler="join" asp-route-id="@item.Id">(připojit)</a></td>
+            </tr>
+        }
+    </table>
+</div>

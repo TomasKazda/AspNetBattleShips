@@ -30,9 +30,10 @@ namespace BattleShips.Services
             this._config = config;
         }
 
-        private Guid GameId { get; set; }
-        private string GetUserId()
+        public Guid GameId { get; private set; }
+        public string GetUserId()
         {
+            //return _userManager.GetUserId(_httpContext.User);
             return _httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? default;
         }
         private Guid LoadOrCreateFromSession()
@@ -54,7 +55,7 @@ namespace BattleShips.Services
             {
                 for (int xrow = 0; xrow < size; xrow++)
                 {
-                    GamePiece gp = new GamePiece() { CoordinateX = xrow, CoordinateY = ycolumn, GameId = this.GameId, OwnerId = GetUserId()};
+                    GamePiece gp = new GamePiece() { CoordinateX = xrow, CoordinateY = ycolumn, GameId = this.GameId, OwnerId = GetUserId() };
                     _db.GamePieces.Add(gp);
                 }
             }
@@ -86,12 +87,26 @@ namespace BattleShips.Services
         {
             string userId = GetUserId();
             if (userId == default) throw new NullReferenceException("User not logged in...");
+
             Game g = _db.Games.SingleOrDefault(g => g.Id == gameId && g.Player1Id != userId);
 
-            if (g.Player2Id != null) return false; //exception needed
-                
+            if (g == default || g.Player2Id != null) return false; //exception needed
+            SetGameId(gameId);
+
             g.Player2Id = userId;
             AddGamePiecesToGame();
+            return true;
+        }
+
+        public bool ContinueToGame(Guid gameId)
+        {
+            string userId = GetUserId();
+            if (userId == default) throw new NullReferenceException("User not logged in...");
+
+            Game g = _db.Games.SingleOrDefault(g => g.Id == gameId && (g.Player1Id == userId || g.Player2Id == userId));
+            if (g == default) return false; //exception needed
+            SetGameId(gameId);
+
             return true;
         }
 
@@ -106,9 +121,9 @@ namespace BattleShips.Services
         public IList<Game> GetMyGames()
         {
             var id = GetUserId();
-            return _db.Games.Where(g => g.Player1Id == id && g.GameState != GameState.WinnerPlayer1 && g.GameState != GameState.WinnerPlayer2).Include(g => g.Player1).Include(g => g.Player2).AsNoTracking().ToList();
+            return _db.Games.Where(g => g.Player1Id == id || g.Player2Id == id).Include(g => g.Player1).Include(g => g.Player2).AsNoTracking().ToList();
         }
-        public IList<Game> GetOtherGames()
+        public IList<Game> GetReadyToJoinGames()
         {
             var id = GetUserId();
 
@@ -119,19 +134,36 @@ namespace BattleShips.Services
         {
             var game = _db.Games.SingleOrDefault(g => g.Id == id);
 
-            if (game != null && game.Player1Id == GetUserId())
+            var userId = GetUserId();
+            if (game != null && (game.Player1Id == userId || game.Player2Id == userId))
             {
                 _db.Games.Remove(game);
                 _db.SaveChanges();
-                UnloadGame();
+                if (id == this.GameId) UnloadGame();
                 return true;
             }
             return false;
         }
-        //public string GetUserId()
-        //{
 
-        //    return _userManager.GetUserId(_httpContext.User);
-        //}
+        public Dictionary<string, IEnumerable<IOrderedEnumerable<GamePiece>>> GetGameBoards(Guid? gameId = null)
+        {
+            if (gameId == null && this.GameId != default) gameId = this.GameId;
+            if (gameId == null) return null; //exception?
+
+            var game = GetGame((Guid)gameId);
+            if (game == null) return null; //exception?
+
+
+            var data = game.GamePieces.OrderBy(gp => gp.CoordinateY).GroupBy(g => g.OwnerId, (key, gp) => gp.GroupBy(g => g.CoordinateY, (key, gp) => gp.OrderBy(gp => gp.CoordinateX)));
+
+            var result = new Dictionary<string, IEnumerable<IOrderedEnumerable<GamePiece>>>();
+            foreach (var item in data)
+            {
+                result.Add(item.FirstOrDefault().FirstOrDefault().OwnerId, item);
+            }
+
+            return result;
+        }
+
     }
 }

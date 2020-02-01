@@ -69,3 +69,51 @@ body {
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
 }
+
+/* game board, game pieces */
+.game-boards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.game-table {
+    min-width: 360px;
+    width: 512px;
+    border-collapse: collapse;
+    border: 2px solid black;
+}
+.game-piece {
+    width: calc(100% / 10);
+    position: relative;
+    background-color: #f0f0f0;
+    border: 1px solid gray;
+}
+
+.game-piece-water {
+    background-color: rgb(117, 200, 255);
+}
+.game-piece-waterHitted {
+    background-color:rgb(117, 250, 255);
+}
+.game-piece-ship {
+    background-color: rgb(0, 40, 66);
+}
+.game-piece-shipHitted {
+    background-color:rgb(92, 0, 15);
+}
+
+.game-piece::after {
+    content: '';
+    display: block;
+    margin-top: 100%;
+}
+
+.game-piece > * {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: inherit;
+}

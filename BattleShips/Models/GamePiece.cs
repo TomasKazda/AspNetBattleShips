@@ -13,7 +13,7 @@ namespace BattleShips.Models
         public GamePiece()
         {
             Hidden = true;
-            Type = GamePieceType.Water;
+            Type = GamePieceType.water;
         }
 
         [Key]

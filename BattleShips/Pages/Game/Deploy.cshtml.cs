@@ -19,20 +19,31 @@ namespace BattleShips
             this._gs = gs;
         }
 
-        public IActionResult OnGet()
+        public IActionResult OnGet(Guid? gameId)
         {
-            if (!_gs.IsGameLoaded) return RedirectToPage("ListGames");
+            if (gameId != default && _gs.ContinueToGame((Guid)gameId))
+            {
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.info, $"Úspěšně připojeno ke hře... ({gameId})");
+            }
+
+            if (!_gs.IsGameLoaded)
+            {
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Nejprve je potřeba vytvořit / vybrat hru...");
+                return RedirectToPage("ListGames");
+            }
 
             var g = _gs.GetGame();
             if (g.GameState == Attack) return RedirectToPage("Play");
             if (g.GameState == WinnerPlayer1)
             {
-                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.info, $"Hra ukončena - vyhrál {g.Player1.UserName}");
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {g.Player1.UserName}");
+                _gs.UnloadGame();
                 return RedirectToPage("ListGames");
             }
             if (g.GameState == WinnerPlayer2)
             {
-                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.info, $"Hra ukončena - vyhrál {g.Player2.UserName}");
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {g.Player2.UserName}");
+                _gs.UnloadGame();
                 return RedirectToPage("ListGames");
             }
 

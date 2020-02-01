@@ -1,0 +1,30 @@
+﻿@page
+@model BattleShips.DetailsModel
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+<partial name="_InfoTempData" />
+
+<div class="game-boards">
+    @foreach (var playersPieces in Model.GameBoards)
+    {
+        <table class="game-table">
+            <caption>@playersPieces.Key</caption>
+            <tbody>
+                @foreach (var rows in playersPieces.Value)
+                {
+                    <tr>
+                        @foreach (var cell in rows)
+                        {
+                            <td class="game-piece game-piece-@cell.Type" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)"><div>&nbsp;</div></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table> 
+    }
+
+</div>

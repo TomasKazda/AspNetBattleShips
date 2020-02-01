@@ -9,12 +9,12 @@ namespace BattleShips.Models
     public enum GamePieceType
     {
         [Display(Name = "Voda")]
-        Water,
+        water,
         [Display(Name = "Vedle")]
-        WaterHitted,
+        waterHitted,
         [Display(Name = "Loď")]
-        Ship,
+        ship,
         [Display(Name = "Zasaženo")]
-        ShipHitted
+        shipHitted
     }
 }
