@@ -37,12 +37,29 @@ namespace BattleShips
 
             if (!_gs.DeleteGame((Guid)id))
             {
-                return NotFound();
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Hru nelze odstranit ({id})");
             }
             else
-                TempData.AddMessage("MsgSuccess", $"Hra odstraněna ({id})");
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra odstraněna ({id})");
 
             return RedirectToPage();
+        }
+
+        public IActionResult OnGetJoin(Guid? id)
+        {
+            if (id == default)
+            {
+                return NotFound();
+            }
+
+            if (!_gs.JoinToGame((Guid)id))
+            {
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Ke hře se nelze připojit! ({id})");
+                return RedirectToPage();
+            }
+                
+            TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Připojeno ke hře. ({id})");
+            return RedirectToPage("Deploy");
         }
     }
 }

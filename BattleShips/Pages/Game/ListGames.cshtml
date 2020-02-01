@@ -48,7 +48,7 @@
                     <td>@item.GameCreatedAt</td>
                     <td>@item.GameState</td>
                     <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
-                    <td>@(item.Player2?.UserName ?? "nepřipojen")</td>
+                    <td><a asp-page-handler="join" asp-route-id="@item.Id">(připojit)</a></td>
                 </tr>
             }
         </table>

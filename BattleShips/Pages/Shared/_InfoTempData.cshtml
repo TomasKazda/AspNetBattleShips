@@ -1,12 +1,12 @@
 ﻿@using Helpers;
-@{var msgs = TempData.GetMessages("MsgSuccess"); }
+@{var msgs = TempData.GetMessages("BattleMessages"); }
 @if (msgs != default)
 {
     <div class="alert-block">
         @foreach (var message in msgs)
         {
-        <div class="alert alert-warning alert-dismissible fade show" role="alert">
-            <strong>Info:</strong> @message
+        <div class="alert alert-@message.MessageType alert-dismissible fade show" role="alert">
+            <strong>Info:</strong> @message.MessageText
             <button type="button" class="close" data-dismiss="alert" aria-label="Close">
                 <span aria-hidden="true">&times;</span>
             </button>

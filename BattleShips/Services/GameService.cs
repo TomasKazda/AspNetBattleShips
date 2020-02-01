@@ -25,7 +25,7 @@ namespace BattleShips.Services
 
             _httpContext = httpContextAccessor.HttpContext;
             //_userManager = userManager;
-            GameId = LoadOrCreate();
+            GameId = LoadOrCreateFromSession();
             this._db = db;
             this._config = config;
         }
@@ -35,12 +35,12 @@ namespace BattleShips.Services
         {
             return _httpContext.User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value ?? default;
         }
-        private Guid LoadOrCreate()
+        private Guid LoadOrCreateFromSession()
         {
             //if (typeof(T).IsClass && result == null) result = (T)Activator.CreateInstance(typeof(T));
             return _httpContext.Session.Get<Guid>("GameKey");
         }
-        private void Save(Guid data)
+        private void SetGameId(Guid data)
         {
             this.GameId = data;
             _httpContext.Session.Set("GameKey", data);
@@ -48,6 +48,7 @@ namespace BattleShips.Services
 
         private void AddGamePiecesToGame()
         {
+            if (this.GameId == default) throw new KeyNotFoundException("Hra není vybrána");
             int size = _config.GetValue<int>("BattlefieldSize");
             for (int ycolumn = 0; ycolumn < size; ycolumn++)
             {
@@ -63,7 +64,7 @@ namespace BattleShips.Services
         public void UnloadGame()
         {
             this.GameId = default;
-            Save(this.GameId);
+            SetGameId(this.GameId);
         }
 
         public bool IsGameLoaded => this.GameId != default;
@@ -76,9 +77,22 @@ namespace BattleShips.Services
             Game g = new Game(gameId, userId);
             _db.Games.Add(g);
             _db.SaveChanges();
-            Save(gameId);
+            SetGameId(gameId);
             AddGamePiecesToGame();
             return gameId;
+        }
+
+        public bool JoinToGame(Guid gameId)
+        {
+            string userId = GetUserId();
+            if (userId == default) throw new NullReferenceException("User not logged in...");
+            Game g = _db.Games.SingleOrDefault(g => g.Id == gameId && g.Player1Id != userId);
+
+            if (g.Player2Id != null) return false; //exception needed
+                
+            g.Player2Id = userId;
+            AddGamePiecesToGame();
+            return true;
         }
 
         public Game GetGame(Guid id)

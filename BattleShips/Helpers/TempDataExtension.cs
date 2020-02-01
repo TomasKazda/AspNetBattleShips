@@ -21,17 +21,38 @@ namespace Helpers
             return value == null ? default : JsonSerializer.Deserialize<T>((string)value);
         }
 
-        public static void AddMessage(this ITempDataDictionary tempData, string key, string value)
+        public static void AddMessage(this ITempDataDictionary tempData, string key, MessageType type, string message)
         {
-            var current = tempData.Get<List<string>>(key);
-            if (current == default) current = new List<string>();
-            current.Add(value);
+            var current = tempData.Get<List<MessageData>>(key);
+            if (current == default) current = new List<MessageData>();
+            current.Add(new MessageData(type, message));
             tempData.Set(key, current);
         }
 
-        public static List<string> GetMessages(this ITempDataDictionary tempData, string key)
+        public static List<MessageData> GetMessages(this ITempDataDictionary tempData, string key)
         {
-            return tempData.Get<List<string>>(key);
+            return tempData.Get<List<MessageData>>(key);
+        }
+
+        public enum MessageType
+        {
+            danger = 1,
+            info,
+            success,
+            warning
+        }
+
+        public struct MessageData
+        {
+
+            public MessageType MessageType;
+            public string MessageText;
+
+            public MessageData(MessageType messageType, string messageText)
+            {
+                MessageType = messageType;
+                MessageText = messageText;
+            }
         }
     }
 }
