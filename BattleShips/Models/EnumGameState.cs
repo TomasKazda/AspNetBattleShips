@@ -8,13 +8,17 @@ namespace BattleShips.Models
 {
     public enum GameState
     {
+        [Display(Name = "Čekání na hráče")]
+        GameCreating = 0,
         [Display(Name = "Umísťování lodí")]
-        ShipDeploying = 1,
+        ShipDeploying,
         [Display(Name = "Útočná fáze")]
-        Attack,
-        [Display(Name = "Výhra hráče č.1")]
-        WinnerPlayer1,
-        [Display(Name = "Výhra hráče č.2")]
-        WinnerPlayer2
+        Ready,
+        [Display(Name = "Výhra hráče")]
+        Winner,
+        [Display(Name = "Prohra hráče")]
+        Loss,
+        [Display(Name = "Konec hry")]
+        End
     }
 }

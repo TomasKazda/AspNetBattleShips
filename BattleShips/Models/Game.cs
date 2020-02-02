@@ -12,8 +12,9 @@ namespace BattleShips.Models
     {
         public Game()
         {
-            Player1OnTurn = true;
-            GameState = GameState.ShipDeploying;
+            PlayerOnTurn = null;
+            GameStateP1 = GameState.ShipDeploying;
+            GameStateP2 = GameState.GameCreating;
             Player2 = null;
             Player2Id = null;
             GameCreatedAt = DateTime.UtcNow;
@@ -42,9 +43,26 @@ namespace BattleShips.Models
         [ForeignKey("Player2")]
         public string Player2Id { get; set; }
 
-        public GameState GameState { get; set; }
+        public GameState GameStateP1 { get; set; }
 
-        public bool Player1OnTurn { get; set; }
+        public GameState GameStateP2 { get; set; }
+
+        [NotMapped]
+        public GameState GameState
+        {
+            get
+            {
+                if (GameStateP2 == GameState.GameCreating) return GameState.GameCreating;
+
+                if (GameStateP1 == GameState.ShipDeploying || GameStateP2 == GameState.ShipDeploying) return GameState.ShipDeploying;
+
+                if (GameStateP1 == GameState.Ready && GameStateP1 == GameStateP2) return GameState.Ready;
+                
+                return GameState.End;
+            }
+        }
+
+        public string PlayerOnTurn { get; set; }
 
         public ICollection<GamePiece> GamePieces { get; set; }
 

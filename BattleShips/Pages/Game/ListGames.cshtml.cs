@@ -22,7 +22,7 @@ namespace BattleShips
         public IList<Game> MyGames { get; set; }
         public IList<Game> OtherGames { get; set; }
 
-        public bool gameLoaded => _gs.IsGameLoaded;
+        public bool GameLoaded => _gs.IsGameLoaded;
 
         public Guid GameId => _gs.GameId;
 

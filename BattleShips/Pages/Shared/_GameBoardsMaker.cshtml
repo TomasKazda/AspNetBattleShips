@@ -1,0 +1,26 @@
+﻿@model BattleShips.Models.ViewModel.GameBoardData
+
+<div class="game-boards">
+    @foreach (var playersPieces in Model.GameBoards)
+    {
+        var userName = playersPieces.Key;
+        if (Model.CurrentGame.Player1Id == playersPieces.Key) userName = Model.CurrentGame.Player1.UserName;
+        if (Model.CurrentGame.Player2Id == playersPieces.Key) userName = Model.CurrentGame.Player2.UserName;
+        if (Model.CurrentUserId == playersPieces.Key) userName += " (moje moře)";
+
+        <table class="game-table">
+            <caption>@userName</caption>
+            <tbody>
+                @foreach (var rows in playersPieces.Value)
+                {
+                    <tr>
+                        @foreach (var cell in rows)
+                        {
+                            <td class="game-piece game-piece-@cell.Type" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)"><div>&nbsp;</div></td>
+                        }
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

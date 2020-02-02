@@ -15,7 +15,7 @@ namespace BattleShips.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.1")
+                .HasAnnotation("ProductVersion", "3.1.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
@@ -28,20 +28,23 @@ namespace BattleShips.Migrations
                     b.Property<DateTime>("GameCreatedAt")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("datetime2")
-                        .HasDefaultValue(new DateTime(2020, 1, 28, 6, 41, 46, 152, DateTimeKind.Utc).AddTicks(2605));
+                        .HasDefaultValue(new DateTime(2020, 2, 2, 15, 7, 43, 227, DateTimeKind.Utc).AddTicks(6224));
 
-                    b.Property<int>("GameState")
+                    b.Property<int>("GameStateP1")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameStateP2")
                         .HasColumnType("int");
 
                     b.Property<string>("Player1Id")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<bool>("Player1OnTurn")
-                        .HasColumnType("bit");
-
                     b.Property<string>("Player2Id")
                         .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("PlayerOnTurn")
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 

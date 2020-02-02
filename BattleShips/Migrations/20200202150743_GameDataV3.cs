@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BattleShips.Migrations
 {
-    public partial class GameDataGuid : Migration
+    public partial class GameDataV3 : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -12,11 +12,12 @@ namespace BattleShips.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(nullable: false),
-                    GameCreatedAt = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 1, 28, 6, 41, 46, 152, DateTimeKind.Utc).AddTicks(2605)),
+                    GameCreatedAt = table.Column<DateTime>(nullable: false, defaultValue: new DateTime(2020, 2, 2, 15, 7, 43, 227, DateTimeKind.Utc).AddTicks(6224)),
                     Player1Id = table.Column<string>(nullable: false),
                     Player2Id = table.Column<string>(nullable: true),
-                    GameState = table.Column<int>(nullable: false),
-                    Player1OnTurn = table.Column<bool>(nullable: false)
+                    GameStateP1 = table.Column<int>(nullable: false),
+                    GameStateP2 = table.Column<int>(nullable: false),
+                    PlayerOnTurn = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {

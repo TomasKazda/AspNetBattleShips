@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using BattleShips.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using BattleShips.Models.ViewModel;
 
 namespace BattleShips
 {
@@ -17,19 +18,25 @@ namespace BattleShips
             this._gs = gs;
         }
 
-        public Dictionary<string, IEnumerable<IOrderedEnumerable<Models.GamePiece>>> GameBoards { get; set; }
-
-        public string ThisPlayer => _gs.GetUserId();
+        public GameBoardData GameBoardData { get; set; }
 
         public IActionResult OnGet(Guid? gameId)
         {
-            GameBoards = _gs.GetGameBoards(gameId);
-
-            if (GameBoards == default)
+            var currentGame = _gs.GetGame(gameId);
+            
+            if (currentGame == default)
             {
                 return NotFound();
             }
+            //if (currentGame.GameState)
+            var gameBoards = _gs.GetGameBoards(gameId);
 
+            GameBoardData = new GameBoardData
+            {
+                GameBoards = gameBoards,
+                CurrentGame = currentGame,
+                CurrentUserId = _gs.GetUserId()
+            };
 
             return Page();
         }

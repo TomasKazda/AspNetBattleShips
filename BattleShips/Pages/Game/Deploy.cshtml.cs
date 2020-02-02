@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BattleShips.Models.ViewModel;
 using BattleShips.Services;
 using Helpers;
 using Microsoft.AspNetCore.Mvc;
@@ -19,6 +20,8 @@ namespace BattleShips
             this._gs = gs;
         }
 
+        public GameBoardData GameBoardData { get; set; }
+
         public IActionResult OnGet(Guid? gameId)
         {
             if (gameId != default && _gs.ContinueToGame((Guid)gameId))
@@ -33,21 +36,31 @@ namespace BattleShips
             }
 
             var g = _gs.GetGame();
-            if (g.GameState == Attack) return RedirectToPage("Play");
-            if (g.GameState == WinnerPlayer1)
+            if (g.GameState == Ready) return RedirectToPage("Play");
+            if (g.GameState == End)
             {
-                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {g.Player1.UserName}");
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {(g.GameStateP1==Winner ? g.Player1.UserName : g.Player2.UserName)}");
                 _gs.UnloadGame();
                 return RedirectToPage("ListGames");
             }
-            if (g.GameState == WinnerPlayer2)
+            //if (currentGame.GameState)
+            var gameBoards = _gs.GetGameBoards(g.Id);
+            GameBoardData = new GameBoardData
             {
-                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {g.Player2.UserName}");
-                _gs.UnloadGame();
-                return RedirectToPage("ListGames");
-            }
-
+                GameBoards = gameBoards,
+                CurrentGame = g,
+                CurrentUserId = _gs.GetUserId()
+            };
             return Page();
+        }
+
+        public IActionResult OnGetDeploy(int id)
+        {
+
+            _gs.DeployUndeployBoat(id);
+
+
+            return RedirectToPage();
         }
     }
 }
