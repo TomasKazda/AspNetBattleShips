@@ -6,6 +6,7 @@ using BattleShips.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using BattleShips.Models.ViewModel;
+using Helpers;
 
 namespace BattleShips
 {
@@ -28,14 +29,15 @@ namespace BattleShips
             {
                 return NotFound();
             }
-            //if (currentGame.GameState)
-            var gameBoards = _gs.GetGameBoards(gameId);
+            //if (currentGame.GameState != Models.GameState.End)
+            //{
+            //    TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Hru nelze zpřístupnit před jejím ukončením! ({currentGame.Id})");
+            //    return RedirectToPage("/Index");
+            //}
 
-            GameBoardData = new GameBoardData
+            GameBoardData = new GameBoardData(currentGame, _gs.GetUserId())
             {
-                GameBoards = gameBoards,
-                CurrentGame = currentGame,
-                CurrentUserId = _gs.GetUserId()
+                HideEnemy = false
             };
 
             return Page();

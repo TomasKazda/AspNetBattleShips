@@ -3,16 +3,20 @@
 @{
     ViewData["Title"] = "Home page";
 }
-<div class="text-center">
-    <h1 class="display-4">The Battleship Game</h1>
-    <partial name="_InfoTempData" />
-    <p>
-        Můžete
-        @if(Model.gameLoaded) {
-        <span><a class="btn btn-primary" asp-page="/Game/Deploy">pokračovat v rozehrané hře</a>,</span> 
-        }
-        <a class="btn btn-primary" asp-page="/Game/CreateNew">vytvořit novou hru</a> nebo
-        <a class="btn btn-primary" asp-page="/Game/ListGames">připojit se ke hře</a>.
+    <div class="text-center">
+        <h1 class="display-4">The Battleship Game</h1>
+
+        @{ var key = "BattleMessages";}
+        <partial name="_InfoTempData" model="key" />
         
-    </p>
-</div>
+        <p>
+            Můžete
+            @if (Model.gameLoaded)
+            {
+                <span><a class="btn btn-primary" asp-page="/Game/Deploy">pokračovat v rozehrané hře</a>,</span>
+            }
+            <a class="btn btn-primary" asp-page="/Game/CreateNew">vytvořit novou hru</a> nebo
+            <a class="btn btn-primary" asp-page="/Game/ListGames">připojit se ke hře</a>.
+
+        </p>
+    </div>

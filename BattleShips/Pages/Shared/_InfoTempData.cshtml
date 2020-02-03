@@ -1,5 +1,8 @@
-﻿@using Helpers;
-@{var msgs = TempData.GetMessages("BattleMessages"); }
+﻿@model string
+@using Helpers;
+
+@{ List<TempDataExtension.MessageData> msgs = TempData.GetMessages(Model); }
+
 @if (msgs != default)
 {
     <div class="alert-block">

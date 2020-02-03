@@ -6,29 +6,8 @@
 
 <h1>Deploy</h1>
 
-<partial name="_InfoTempData" />
+@{ var key = "BattleMessages";}
+<partial name="_InfoTempData" model="key" />
 
-<div class="game-boards">
-    @foreach (var playersPieces in Model.GameBoardData.GameBoards)
-    {
-        var userName = playersPieces.Key;
-        if (Model.GameBoardData.CurrentGame.Player1Id == playersPieces.Key) userName = Model.GameBoardData.CurrentGame.Player1.UserName;
-        if (Model.GameBoardData.CurrentGame.Player2Id == playersPieces.Key) userName = Model.GameBoardData.CurrentGame.Player2.UserName;
-        if (Model.GameBoardData.CurrentUserId == playersPieces.Key) userName += " (moje moře)";
-
-        <table class="game-table">
-            <caption>@userName</caption>
-            <tbody>
-                @foreach (var rows in playersPieces.Value)
-                {
-                    <tr>
-                        @foreach (var cell in rows)
-                        {
-                            <td class="game-piece game-piece-@cell.Type" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)"><a asp-page-handler="deploy" asp-route-id="@cell.Id">&nbsp;</a></td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
-    }
-</div>
+@*<a asp-page-handler="deploy" asp-route-id="@cell.Id">&nbsp;</a>*@
+<partial name="_GameBoardsMaker" model="Model.GameBoardData" />

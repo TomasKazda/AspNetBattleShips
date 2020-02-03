@@ -89,7 +89,9 @@ body {
     background-color: #f0f0f0;
     border: 1px solid gray;
 }
-
+.game-piece-hidden {
+    background-color: rgb(192, 192, 192);
+}
 .game-piece-water {
     background-color: rgb(117, 200, 255);
 }
@@ -116,4 +118,8 @@ body {
     left: 0;
     right: 0;
     background-color: inherit;
+}
+
+.game-piece:hover > * {
+    background-color: rgba(128, 128, 128, 0.50);
 }

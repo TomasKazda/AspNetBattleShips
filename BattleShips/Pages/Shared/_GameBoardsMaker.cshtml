@@ -1,12 +1,14 @@
 ﻿@model BattleShips.Models.ViewModel.GameBoardData
+@using BattleShips.Models
 
 <div class="game-boards">
-    @foreach (var playersPieces in Model.GameBoards)
+    @foreach (var playersPieces in Model.GetGameBoards())
     {
-        var userName = playersPieces.Key;
+        string userName = playersPieces.Key;
+        bool thisUser = Model.CurrentUserId == playersPieces.Key;
         if (Model.CurrentGame.Player1Id == playersPieces.Key) userName = Model.CurrentGame.Player1.UserName;
         if (Model.CurrentGame.Player2Id == playersPieces.Key) userName = Model.CurrentGame.Player2.UserName;
-        if (Model.CurrentUserId == playersPieces.Key) userName += " (moje moře)";
+        if (thisUser) userName += " (moje moře)";
 
         <table class="game-table">
             <caption>@userName</caption>
@@ -16,7 +18,9 @@
                     <tr>
                         @foreach (var cell in rows)
                         {
-                            <td class="game-piece game-piece-@cell.Type" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)"><div>&nbsp;</div></td>
+                            <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)">
+                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@(Model.RouteDataId ? cell.Id : 0)"></a>                             
+                            </td>
                         }
                     </tr>
                 }

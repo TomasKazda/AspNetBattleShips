@@ -43,20 +43,20 @@ namespace BattleShips
                 _gs.UnloadGame();
                 return RedirectToPage("ListGames");
             }
-            //if (currentGame.GameState)
-            var gameBoards = _gs.GetGameBoards(g.Id);
-            GameBoardData = new GameBoardData
+
+            GameBoardData = new GameBoardData(g, _gs.GetUserId())
             {
-                GameBoards = gameBoards,
-                CurrentGame = g,
-                CurrentUserId = _gs.GetUserId()
+                PageHandler = "deploy",
+                RouteDataId = true
             };
+
+
             return Page();
         }
 
         public IActionResult OnGetDeploy(int id)
         {
-
+            if (id == 0) return Page();
             _gs.DeployUndeployBoat(id);
 
 

@@ -5,9 +5,13 @@
 }
 
 <h1>Vytvoření nové hry</h1>
+
+@{ var key = "BattleMessages";}
+<partial name="_InfoTempData" model="key" />
+
 @if (Model.GameData != default)
 {
-  <p>Je aktivní hra z @Model.GameData.GameCreatedAt (@Model.GameData.GameState) mezi @Model.GameData.Player1?.UserName a @(Model.GameData.Player2?.UserName ?? "nepřipojen")</p>
+    <p>Je aktivní hra z @Model.GameData.GameCreatedAt (@Model.GameData.GameState) mezi @Model.GameData.Player1?.UserName a @(Model.GameData.Player2?.UserName ?? "nepřipojen")</p>
 }
 <p class="text-center">
     <a class="btn btn-warning" asp-page="Deploy">Návrat do hry</a>

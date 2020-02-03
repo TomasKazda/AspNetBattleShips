@@ -6,7 +6,8 @@
 
 <h1>Details</h1>
 
-<partial name="_InfoTempData" />
+@{ var key = "BattleMessages";}
+<partial name="_InfoTempData" model="key" />
 
 <partial name="_GameBoardsMaker" model="Model.GameBoardData" />
 
