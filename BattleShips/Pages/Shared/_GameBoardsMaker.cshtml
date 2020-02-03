@@ -18,9 +18,18 @@
                     <tr>
                         @foreach (var cell in rows)
                         {
-                            <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)">
-                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@(Model.RouteDataId ? cell.Id : 0)"></a>                             
-                            </td>
+                        <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)">
+                            @if (Model.RouteDataId)
+                            {
+                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@cell.Id"></a>
+                            }
+                            else
+                            {
+                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler"></a>
+                            }
+
+
+                        </td>
                         }
                     </tr>
                 }

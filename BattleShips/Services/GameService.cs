@@ -50,7 +50,7 @@ namespace BattleShips.Services
         private void AddGamePiecesToGame()
         {
             if (this.GameId == default) throw new KeyNotFoundException("Hra není vybrána");
-            int size = _config.GetValue<int>("BattlefieldSize");
+            int size = _config.GetValue<int>("GameSetup:BattlefieldSize");
             for (int ycolumn = 0; ycolumn < size; ycolumn++)
             {
                 for (int xrow = 0; xrow < size; xrow++)
@@ -158,26 +158,6 @@ namespace BattleShips.Services
                 return true;
             }
             return false;
-        }
-
-        public Dictionary<string, IEnumerable<IOrderedEnumerable<GamePiece>>> GetGameBoards(Guid? gameId = null)
-        {
-            if (gameId == null && this.GameId != default) gameId = this.GameId;
-            if (gameId == null) return null; //exception?
-
-            var game = GetGame((Guid)gameId);
-            if (game == null) return null; //exception?
-
-
-            var data = game.GamePieces.OrderBy(gp => gp.CoordinateY).GroupBy(g => g.OwnerId, (key, gp) => gp.GroupBy(g => g.CoordinateY, (key, gp) => gp.OrderBy(gp => gp.CoordinateX)));
-
-            var result = new Dictionary<string, IEnumerable<IOrderedEnumerable<GamePiece>>>();
-            foreach (var item in data)
-            {
-                result.Add(item.FirstOrDefault().FirstOrDefault().OwnerId, item);
-            }
-
-            return result;
         }
 
         public bool DeployUndeployBoat(int gamePieceId)
