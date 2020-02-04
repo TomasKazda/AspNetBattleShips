@@ -54,10 +54,10 @@ namespace BattleShips
             return Page();
         }
 
-        public IActionResult OnGetDeploy(int id)
+        public IActionResult OnGetDeploy(int? id)
         {
-            if (id == 0) return Page();
-            _gs.DeployUndeployBoat(id);
+            if (id == null) return Page();
+            _gs.DeployUndeployBoat((int)id);
 
 
             return RedirectToPage();

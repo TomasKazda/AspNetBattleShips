@@ -21,7 +21,7 @@
                         <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@Html.DisplayFor(model => @cell.Type) (@cell.CoordinateY, @cell.CoordinateX)">
                             @if (Model.RouteDataId)
                             {
-                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@cell.Id"></a>
+                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@((int?)cell.Id)"></a>
                             }
                             else
                             {

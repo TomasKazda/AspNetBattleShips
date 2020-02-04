@@ -31,7 +31,7 @@ namespace BattleShips
             }
             //if (currentGame.GameState != Models.GameState.End)
             //{
-            //    TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Hru nelze zpřístupnit před jejím ukončením! ({currentGame.Id})");
+            //    TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.warning, $"Infopanel nelze zpřístupnit před ukončením hry! ({currentGame.Id})");
             //    return RedirectToPage("/Index");
             //}
 

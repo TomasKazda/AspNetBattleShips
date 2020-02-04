@@ -126,11 +126,11 @@ namespace BattleShips.Services
             return true;
         }
 
-        public Game GetGame(Guid? id = null)
+        public Game GetGame(Guid? gameId = null)
         {
-            if (id == null && this.GameId != default) id = this.GameId;
+            if (gameId == null && this.GameId != default) gameId = this.GameId;
 
-            return _db.Games.Where(g => g.Id == id).Include(g => g.GamePieces).Include(g => g.Player1).Include(g => g.Player2).AsNoTracking().SingleOrDefault();
+            return _db.Games.Where(g => g.Id == gameId).Include(g => g.GamePieces).Include(g => g.Player1).Include(g => g.Player2).AsNoTracking().SingleOrDefault();
         }
 
         public IList<Game> GetMyGames()
@@ -172,5 +172,7 @@ namespace BattleShips.Services
             _db.SaveChanges();
             return true;
         }
+
+        public void StopDeploying()
     }
 }
