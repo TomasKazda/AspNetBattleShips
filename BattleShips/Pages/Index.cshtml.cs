@@ -13,16 +13,14 @@ namespace BattleShips.Pages
     //[Authorize]
     public class IndexModel : PageModel
     {
-        private readonly ILogger<IndexModel> _logger;
         private readonly GameService _gs;
 
-        public IndexModel(ILogger<IndexModel> logger, GameService gs)
+        public IndexModel(GameService gs)
         {
-            _logger = logger;
             this._gs = gs;
         }
 
-        public bool gameLoaded => _gs.IsGameLoaded;
+        public bool GameLoaded => _gs.IsGameLoaded;
 
         public void OnGet()
         {

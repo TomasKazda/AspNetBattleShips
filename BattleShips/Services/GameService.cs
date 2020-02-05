@@ -126,11 +126,14 @@ namespace BattleShips.Services
             return true;
         }
 
-        public Game GetGame(Guid? gameId = null)
+        public Game GetGame(Guid? gameId = null, bool asNoTracking = true)
         {
             if (gameId == null && this.GameId != default) gameId = this.GameId;
 
-            return _db.Games.Where(g => g.Id == gameId).Include(g => g.GamePieces).Include(g => g.Player1).Include(g => g.Player2).AsNoTracking().SingleOrDefault();
+            var game = _db.Games.Where(g => g.Id == gameId).Include(g => g.GamePieces).Include(g => g.Player1).Include(g => g.Player2);
+            if (asNoTracking) return game.AsNoTracking().SingleOrDefault();
+
+            return game.SingleOrDefault();
         }
 
         public IList<Game> GetMyGames()
@@ -173,6 +176,49 @@ namespace BattleShips.Services
             return true;
         }
 
-        public void StopDeploying()
+        public bool ChargeBoat(int gamePieceId)
+        {
+            var currentUserId = GetUserId();
+            var gamePiece = _db.GamePieces.Where(gp => gp.Id == gamePieceId && gp.OwnerId != currentUserId && gp.GameId == this.GameId).Include(gp => gp.GameLink).SingleOrDefault();
+            if (gamePiece == default) return false;
+
+            var game = gamePiece.GameLink;
+            if (game == default || 
+                game.GameState != GameState.Ready ||
+                game.PlayerOnTurn != currentUserId) return false;
+
+            if (!game.SwitchPlayerOnTurn()) return false;
+            
+            gamePiece.Hidden = false;
+            if (gamePiece.Type == GamePieceType.ship) gamePiece.Type = GamePieceType.shipHitted;
+            else if (gamePiece.Type == GamePieceType.water) gamePiece.Type = GamePieceType.waterHitted;
+            
+            _db.SaveChanges();
+            return true;
+        }
+
+        public void StopDeploying(Guid? gameId = null)
+        {
+            var userId = GetUserId();
+            Game g = GetGame(gameId, false);
+           
+            if (g == default) return;
+            if (g.Player1Id != userId && g.Player2Id != userId) return;
+            if (g.GameState != GameState.ShipDeploying && g.GameState != GameState.GameCreating) return;
+
+            if (GetCurrentPlayerGameState((Guid) GameId) == GameState.ShipDeploying)
+            {
+                if (g.Player1Id == userId) g.GameStateP1 = GameState.Ready;
+                else g.GameStateP2 = GameState.Ready;
+                g.PlayerOnTurn = userId;
+                _db.SaveChanges();
+            } else
+            if (GetCurrentPlayerGameState((Guid)GameId) == GameState.Ready)
+            {
+                if (g.Player1Id == userId) g.GameStateP1 = GameState.ShipDeploying;
+                else g.GameStateP2 = GameState.ShipDeploying;
+                _db.SaveChanges();
+            }
+        }
     }
 }

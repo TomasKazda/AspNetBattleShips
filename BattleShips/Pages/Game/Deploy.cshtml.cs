@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using BattleShips.Models;
 using BattleShips.Models.ViewModel;
 using BattleShips.Services;
 using Helpers;
@@ -21,6 +22,9 @@ namespace BattleShips
         }
 
         public GameBoardData GameBoardData { get; set; }
+
+        public GameState GameState { get; set; }
+        public GameState CurrentPlayerGameState { get; set; }
 
         public IActionResult OnGet(Guid? gameId)
         {
@@ -50,6 +54,8 @@ namespace BattleShips
                 RouteDataId = true
             };
 
+            CurrentPlayerGameState = _gs.GetCurrentPlayerGameState();
+            GameState = g.GameState;
 
             return Page();
         }
@@ -59,6 +65,13 @@ namespace BattleShips
             if (id == null) return Page();
             _gs.DeployUndeployBoat((int)id);
 
+
+            return RedirectToPage();
+        }
+
+        public IActionResult OnGetCharge()
+        {
+            _gs.StopDeploying();
 
             return RedirectToPage();
         }

@@ -5,9 +5,20 @@
 }
 
 <h1>Deploy</h1>
+<p>
+    @if (Model.CurrentPlayerGameState == Models.GameState.ShipDeploying)
+    {
+        <a class="btn btn-primary" asp-page-handler="charge">Konec umisťování lodí</a>
+    }
+    else
+    {
+        <a class="btn btn-primary" asp-page-handler="charge">Změnit umístění lodí</a>
+        <a class="btn btn-danger" asp-page="play">Přejít na bitevní pole</a>
+    }
+</p>
 
-@{ var key = "BattleMessages";}
-<partial name="_InfoTempData" model="key" />
+    @{ var key = "BattleMessages";}
+    <partial name="_InfoTempData" model="key" />
 
-@*<a asp-page-handler="deploy" asp-route-id="@cell.Id">&nbsp;</a>*@
-<partial name="_GameBoardsMaker" model="Model.GameBoardData" />
+    @*<a asp-page-handler="deploy" asp-route-id="@cell.Id">&nbsp;</a>*@
+    <partial name="_GameBoardsMaker" model="Model.GameBoardData" />

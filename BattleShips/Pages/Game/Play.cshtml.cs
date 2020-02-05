@@ -36,7 +36,16 @@ namespace BattleShips
             }
 
             var g = _gs.GetGame();
-            if (g.GameState == ShipDeploying) return RedirectToPage("Deploy");
+            if (g.GameState == GameCreating)
+            {
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.info, $"Druhý hráč není pravděpodobně připojen...");
+                return RedirectToPage("ListGames");
+            }
+            if (g.GameState == ShipDeploying)
+            {
+                TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.info, $"Stále probíhá umísťování lodí...");
+                return RedirectToPage("Deploy");
+            }
             if (g.GameState == End)
             {
                 TempData.AddMessage("BattleMessages", TempDataExtension.MessageType.success, $"Hra ukončena - vyhrál {(g.GameStateP1 == Winner ? g.Player1.UserName : g.Player2.UserName)}");
@@ -46,7 +55,7 @@ namespace BattleShips
 
             GameBoardData = new GameBoardData(g, _gs.GetUserId())
             {
-                PageHandler = "play",
+                PageHandler = "fire",
                 RouteDataId = true
             };
 
@@ -57,7 +66,7 @@ namespace BattleShips
         public IActionResult OnGetFire(int? id)
         {
             if (id == null) return Page();
-            //_gs.DeployUndeployBoat((int)id);
+            _gs.ChargeBoat((int)id);
 
 
             return RedirectToPage();

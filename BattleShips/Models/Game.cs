@@ -64,6 +64,14 @@ namespace BattleShips.Models
 
         public string PlayerOnTurn { get; set; }
 
+        public bool SwitchPlayerOnTurn()
+        {
+            if (PlayerOnTurn == default) return false;
+            if (PlayerOnTurn == Player1Id) PlayerOnTurn = Player2Id;
+            else PlayerOnTurn = Player1Id;
+            return true;
+        }
+
         public ICollection<GamePiece> GamePieces { get; set; }
 
     }
