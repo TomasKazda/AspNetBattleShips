@@ -9,6 +9,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using BattleShips.Models;
 using BattleShips.Data;
+using BattleShips.Models.ViewModel;
 
 namespace BattleShips.Services
 {
@@ -183,42 +184,105 @@ namespace BattleShips.Services
             if (gamePiece == default) return false;
 
             var game = gamePiece.GameLink;
-            if (game == default || 
+            if (game == default ||
                 game.GameState != GameState.Ready ||
                 game.PlayerOnTurn != currentUserId) return false;
 
-            if (!game.SwitchPlayerOnTurn()) return false;
-            
+            //pokud trefil, hraje znovu
+            if (gamePiece.Type != GamePieceType.ship)
+                if (!game.SwitchPlayerOnTurn()) return false;
+
+            //zásah lodě nebo zásah vody
             gamePiece.Hidden = false;
             if (gamePiece.Type == GamePieceType.ship) gamePiece.Type = GamePieceType.shipHitted;
             else if (gamePiece.Type == GamePieceType.water) gamePiece.Type = GamePieceType.waterHitted;
-            
+
+            //pokud je konec hry
+            CheckEnd(game.Id);
+
             _db.SaveChanges();
             return true;
+        }
+
+        private bool CheckEnd(Guid gameId)
+        {
+            var game = GetGame(gameId, false);
+            var d = game.GamePieces.Where(s => s.OwnerId == game.Player1Id).Count(s => s.Type == GamePieceType.ship);
+            if (d == 0)
+            {
+                game.GameStateP1 = GameState.Loss;
+                game.GameStateP2 = GameState.Winner;
+                _db.SaveChanges();
+                return true;
+            }
+            else
+            if (game.GamePieces.Where(s => s.OwnerId == game.Player2Id).Count(s => s.Type == GamePieceType.ship) == 0)
+            {
+                game.GameStateP2 = GameState.Loss;
+                game.GameStateP1 = GameState.Winner;
+                _db.SaveChanges();
+                return true;
+            }
+
+            return false;
         }
 
         public void StopDeploying(Guid? gameId = null)
         {
             var userId = GetUserId();
             Game g = GetGame(gameId, false);
-           
+
             if (g == default) return;
             if (g.Player1Id != userId && g.Player2Id != userId) return;
             if (g.GameState != GameState.ShipDeploying && g.GameState != GameState.GameCreating) return;
 
-            if (GetCurrentPlayerGameState((Guid) GameId) == GameState.ShipDeploying)
+            if (GetCurrentPlayerGameState((Guid)GameId) == GameState.ShipDeploying)
             {
                 if (g.Player1Id == userId) g.GameStateP1 = GameState.Ready;
                 else g.GameStateP2 = GameState.Ready;
                 g.PlayerOnTurn = userId;
                 _db.SaveChanges();
-            } else
+            }
+            else
             if (GetCurrentPlayerGameState((Guid)GameId) == GameState.Ready)
             {
                 if (g.Player1Id == userId) g.GameStateP1 = GameState.ShipDeploying;
                 else g.GameStateP2 = GameState.ShipDeploying;
                 _db.SaveChanges();
             }
+        }
+
+        public Dictionary<string, GameStatsPlayerInfo> GetGameInfo(bool opponentInfo = true, string playerId = null, Guid gameId = default)
+        {
+            if (playerId == null) playerId = GetUserId();
+            if (gameId == default) gameId = GameId;
+
+            var game = GetGame(gameId);
+
+            var info = new Dictionary<string, GameStatsPlayerInfo>();
+
+
+            var idata = new GameStatsPlayerInfo()
+            {
+                PlayerName = game.Player1.UserName,
+                PlayerId = game.Player1Id,
+                AllShipCount = game.GamePieces.Count(s => s.OwnerId == game.Player1Id && (s.Type == GamePieceType.ship || s.Type == GamePieceType.shipHitted)),
+                HittedShipCount = game.GamePieces.Count(s => s.OwnerId == game.Player1Id && s.Type == GamePieceType.shipHitted)
+            };
+            if (game.Player1Id == playerId) idata.PlayerName += " (já)";
+            info.Add(game.Player1Id, idata);
+
+            idata = new GameStatsPlayerInfo()
+            {
+                PlayerName = game.Player2.UserName,
+                PlayerId = game.Player2Id,
+                AllShipCount = game.GamePieces.Count(s => s.OwnerId == game.Player2Id && (s.Type == GamePieceType.ship || s.Type == GamePieceType.shipHitted)),
+                HittedShipCount = game.GamePieces.Count(s => s.OwnerId == game.Player2Id && s.Type == GamePieceType.shipHitted)
+            };
+            if (game.Player2Id == playerId) idata.PlayerName += " (já)";
+            info.Add(game.Player2Id, idata);
+
+            return info;
         }
     }
 }

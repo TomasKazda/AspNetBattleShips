@@ -71,6 +71,10 @@ body {
 }
 
 /* game board, game pieces */
+.game-header {
+    display: flex;
+    justify-content: space-between;
+}
 .game-boards {
     display: flex;
     flex-wrap: wrap;
@@ -122,4 +126,35 @@ body {
 
 .game-piece:hover > * {
     background-color: rgba(128, 128, 128, 0.50);
+}
+
+main {
+    position: relative;
+}
+
+.alert-block {
+    position: absolute;
+    min-width: 60%;
+    top: 3em;
+    right: 50%;
+    margin: 0.5em;
+    transform: translateX(50%);
+    z-index: 2;
+}
+
+main h1 {
+    /*margin-bottom: 0.5em;*/
+}
+
+.info-box {
+    display: flex;
+    align-items: center;
+    /*position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1em;*/
+}
+
+.info-box > * {
+    margin: 0.25em 0.5em;
 }

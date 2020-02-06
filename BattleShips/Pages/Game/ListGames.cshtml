@@ -32,7 +32,7 @@
         @foreach (var item in Model.MyGames)
         {
             <tr>
-                <td>@item.GameCreatedAt</td>
+                <td><a asp-page="/Game/Details" asp-route-gameId="@item.Id" title="Detail hry">@item.GameCreatedAt</a></td>
                 <td>@Html.DisplayFor(model => item.GameState)</td>
                 <td>@(item.Player1?.UserName ?? "nepřipojen")</td>
                 <td>@(item.Player2?.UserName ?? "nepřipojen")</td>

@@ -21,6 +21,10 @@ namespace BattleShips
         }
 
         public GameBoardData GameBoardData { get; set; }
+        
+        public Dictionary<string, GameStatsPlayerInfo> GameInfo { get; set; }
+
+        public string PlayerOnTurnMessage { get; set; }
 
         public IActionResult OnGet(Guid? gameId)
         {
@@ -59,6 +63,11 @@ namespace BattleShips
                 RouteDataId = true
             };
 
+            GameInfo = _gs.GetGameInfo();
+
+            if (g.PlayerOnTurn == _gs.GetUserId())
+                PlayerOnTurnMessage = "Jsi na tahu";
+            else PlayerOnTurnMessage = "Čeká se na soupeře";
 
             return Page();
         }

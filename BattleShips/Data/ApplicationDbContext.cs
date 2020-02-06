@@ -4,6 +4,8 @@ using System.Text;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using BattleShips.Models;
+using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace BattleShips.Data
 {
@@ -12,6 +14,8 @@ namespace BattleShips.Data
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
+            //if (!Database.GetService<IRelationalDatabaseCreator>().Exists())
+            //    Database.Migrate(); 
         }
 
         public DbSet<Game> Games { get; set; }

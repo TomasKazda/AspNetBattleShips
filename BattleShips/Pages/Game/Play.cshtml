@@ -4,9 +4,15 @@
     ViewData["Title"] = "Play";
 }
 
-<h1>Bitva</h1>
+<header class="game-header">
+    <h1>Bitva</h1>
+    @{ var key = "BattleMessages";}
+    <partial name="_InfoTempData" model="key" />
 
-@{ var key = "BattleMessages";}
-<partial name="_InfoTempData" model="key" />
+    <div class="info-box">
+        <p><a class="btn btn-success" asp-page="play">@Model.PlayerOnTurnMessage</a></p>
+        <partial name="_InfoGameData" model="Model.GameInfo" />
+    </div>
+</header>
 
 <partial name="_GameBoardsMaker" model="Model.GameBoardData" />

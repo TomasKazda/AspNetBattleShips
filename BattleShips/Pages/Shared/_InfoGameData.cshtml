@@ -1,0 +1,27 @@
+﻿@model Dictionary<string, GameStatsPlayerInfo>
+@using BattleShips.Models.ViewModel
+
+<div class="info-statistics">
+    <table class="table table-sm table-striped table-bordered">
+        @*<thead>
+            <tr>
+                <th>@Html.DisplayNameFor(m => m.FirstOrDefault().Value.PlayerName)</th>
+                <th>
+                    @Html.DisplayNameFor(m => m.FirstOrDefault().Value.HittedShipCount) /
+                    @Html.DisplayNameFor(m => m.FirstOrDefault().Value.AllShipCount)
+                </th>
+            </tr>
+        </thead>*@
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Value.PlayerName</td>
+                    <td>
+                        @item.Value.HittedShipCount / @item.Value.AllShipCount
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
