@@ -2,6 +2,10 @@
   "iisSettings": {
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://www.pslib.cloud/BattleShips",
+      "sslPort": 0
+    },
     "iisExpress": {
       "applicationUrl": "http://localhost:62087/battleships",
       "sslPort": 44306
