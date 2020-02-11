@@ -50,6 +50,18 @@ namespace BattleShips
             services.AddRazorPages(opt => {
                 opt.Conventions.AuthorizeFolder("/Game");
             });
+
+            services.AddAuthentication()
+                .AddMicrosoftAccount(mso =>
+                {
+                    mso.ClientId = Configuration["Authentication:Microsoft:ClientId"];
+                    mso.ClientSecret = Configuration["Authentication:Microsoft:ClientSecret"];
+                })
+                .AddGoogle(gopt =>
+                {
+                    gopt.ClientId = Configuration["Authentication:Google:ClientId"];
+                    gopt.ClientSecret = Configuration["Authentication:Google:ClientSecret"];
+                });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

@@ -51,7 +51,8 @@ namespace BattleShips
             GameBoardData = new GameBoardData(g, _gs.GetUserId())
             {
                 PageHandler = "deploy",
-                RouteDataId = true
+                RouteDataId = true,
+                HideEnemyBoards = true
             };
 
             CurrentPlayerGameState = _gs.GetCurrentPlayerGameState();

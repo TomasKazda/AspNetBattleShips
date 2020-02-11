@@ -21,6 +21,8 @@ namespace BattleShips.Models.ViewModel
 
         public bool HideEnemy { get; set; } = true;
 
+        public bool HideEnemyBoards { get; set; } = false;
+
         public Game CurrentGame { get; }
         public string CurrentUserId { get; }
         public Dictionary<string, IEnumerable<IOrderedEnumerable<GamePiece>>> GetGameBoards() {

@@ -10,30 +10,35 @@
         if (Model.CurrentGame.Player2Id == playersPieces.Key) userName = Model.CurrentGame.Player2.UserName;
         if (thisUser) userName += " (moje moře)";
 
-        <table class="game-table">
-            <caption>@userName</caption>
-            <tbody>
-                @foreach (var rows in playersPieces.Value)
-                {
-                    <tr>
-                        @foreach (var cell in rows)
-                        {
-                        <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@if (!(Model.HideEnemy && !thisUser && cell.Hidden)) {@Html.DisplayFor(model => cell.Type);} (@cell.CoordinateY, @cell.CoordinateX)">
-                            @if (Model.RouteDataId)
+        if (!Model.HideEnemyBoards || thisUser)
+        {
+            <table class="game-table">
+                <caption>@userName</caption>
+                <tbody>
+                    @foreach (var rows in playersPieces.Value)
+                    {
+                        <tr>
+                            @foreach (var cell in rows)
                             {
-                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@((int?)cell.Id)"></a>
-                            }
-                            else
-                            {
-                                <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler"></a>
-                            }
+                            <td class="game-piece @(Model.HideEnemy && !thisUser && @cell.Hidden ? "game-piece-hidden" : $"game-piece-{cell.Type}")" title="@if (!(Model.HideEnemy && !thisUser && cell.Hidden))
+                            {@Html.DisplayFor(model => cell.Type);
+                            } (@cell.CoordinateY, @cell.CoordinateX)">
+                                @if (Model.RouteDataId)
+                                {
+                                    <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler" asp-route-id="@((int?)cell.Id)"></a>
+                                }
+                                else
+                                {
+                                    <a asp-page="@Model.Page" asp-page-handler="@Model.PageHandler"></a>
+                                }
 
 
-                        </td>
-                        }
-                    </tr>
-                }
-            </tbody>
-        </table>
+                            </td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
     }
 </div>
